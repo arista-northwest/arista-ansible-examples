@@ -1,0 +1,20 @@
+---
+# Deprecated 'provider' format:
+# provider:
+#   host: "{{ inventory_hostname }}"
+#   username: admin
+#   password: ""
+#   transport: eapi
+#   use_ssl: false
+#   validate_certs: no
+#   authorize: true
+
+# New ansible connection plugins:
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: arista.eos.eos
+ansible_user: admin
+ansible_password: ''
+ansible_become: yes
+ansible_become_method: enable
+ansible_become_password: ''
+#ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'

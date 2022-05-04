@@ -1,0 +1,39 @@
+---
+
+- name: "Demonstrate connecting to switches"
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Accept SSH host keys
+      connection: local
+      become: false
+      shell: |
+        ssh-keygen -F {{ inventory_hostname }} || 
+          ssh-keyscan -H {{ inventory_hostname }} >> ~/.ssh/known_hosts
+      register: known_hosts_script
+      changed_when: "'found' not in known_hosts_script.stdout"
+    
+    ###
+    # Collect data
+    #
+    - name: Gather facts (eos)
+      arista.eos.eos_facts:
+      when: ansible_network_os == 'arista.eos.eos'
+
+    - name: Display some facts
+      debug:
+        msg: "The hostname is {{ ansible_net_hostname }} and the OS is {{ ansible_net_version }}"
+
+    ###
+    # Replace / DIFF config
+    #
+    - name: Load config
+      arista.eos.eos_config:
+        replace: config
+        src: "../resources/{{ inventory_hostname }}.cfg"
+
+    - name: Compare config
+      arista.eos.eos_config:
+        diff_against: startup
+      when: ansible_network_os == 'arista.eos.eos'

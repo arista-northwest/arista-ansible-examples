@@ -1,0 +1,30 @@
+eos_users:
+  - name: nocuser
+    encryption: sha512
+    secret: '$6$xiLusc4hQu8RE676$n1a8p.rxn2Ii6.3kv6owynuJz3nLSsV5WgDUWD/xiaQwI2NvgetPpKkwqW8xiOM2CHO75kXCVb5UxmepasDaJ.'
+    privilege: 15
+    role: network-admin
+  
+  - name: simplejack
+    nopassword: true
+    privilege: 0
+    role: network-operator
+
+hostname: veos103
+
+eos_ip_routing_enabled: yes
+
+interfaces:
+  - name: Loopback0
+    description: Router-ID Loopback
+
+  - name: Ethernet2
+    description: Link to veos-2-eth1
+
+ip_interfaces:
+  - name: Loopback0
+    address: 10.0.0.103/32
+
+  - name: Ethernet2
+    address: 169.254.0.3/31
+    mtu: 9000
