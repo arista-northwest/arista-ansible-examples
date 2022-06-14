@@ -1,0 +1,30 @@
+---
+
+- name: "Demonstrate connecting to switches"
+  hosts: all
+  gather_facts: no
+  
+  tasks:
+    ###
+    # Collect data
+    #
+    - name: Gather EOS facts
+      arista.eos.eos_facts:
+      when: ansible_network_os == 'arista.eos.eos'
+
+    - name: Print all available facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    ###
+    # Replace / DIFF config
+    #
+    - name: Load config
+      arista.eos.eos_config:
+        replace: config
+        src: "../resources/{{ inventory_hostname }}.cfg"
+
+    - name: Compare startup and running configs
+      arista.eos.eos_config:
+        diff_against: startup
+      when: ansible_network_os == 'arista.eos.eos'
