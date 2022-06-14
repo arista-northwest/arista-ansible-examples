@@ -1,4 +1,5 @@
 ---
+###
 # Deprecated 'provider' format:
 # provider:
 #   host: "{{ inventory_hostname }}"
@@ -9,7 +10,11 @@
 #   validate_certs: no
 #   authorize: true
 
+###
 # New ansible connection plugins:
+#
+# To connect weith eAPI use:
+# ansible_connection: ansible.netcommon.httpapi
 ansible_connection: ansible.netcommon.network_cli
 ansible_network_os: arista.eos.eos
 ansible_user: admin
@@ -17,4 +22,9 @@ ansible_password: ''
 ansible_become: yes
 ansible_become_method: enable
 ansible_become_password: ''
-#ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q bastion01"'
+
+#
+target_version: 4.27.3F
+image_source: http://192.168.56.10/vEOS-lab-4.27.3F.swi
+image_filename: vEOS-lab-4.27.3F.swi
+image_md5: c7d1f5a6c7859db2a0eacc61f7fc2179

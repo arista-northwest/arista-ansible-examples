@@ -1,0 +1,36 @@
+- name: "Demonstrate connecting to switches"
+  hosts: eos
+  gather_facts: no
+
+  tasks:
+    - name: Gather EOS facts
+      arista.eos.eos_facts:
+      when: ansible_network_os == 'arista.eos.eos'
+
+    - name: Creating fact to see if the switch needs to be upgraded to {{ target_version }}
+      set_fact:
+        perform_upgrade={{ target_version != ansible_net_version }}
+
+    - name: Print all available facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    - when: perform_upgrade
+
+      block:
+        - name: Download and install image
+          eos_command:
+            commands:
+              - copy {{ image_source }} flash:{{ image_filename }}
+        
+        #- Md5 Check...
+        - name: Install image
+          eos_config:
+            lines:
+              - boot system flash:{{ image_filename }}
+
+        - name: Reload the switch
+          eos_command:
+            commands:
+              - write
+              - reload now
